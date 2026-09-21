@@ -102,12 +102,7 @@ int start_server(server *s) {
       struct sockaddr_in6 *v6_addr = (struct sockaddr_in6 *)&client_addr;
       // use v6_addr->sin6_port, etc.
     }
-
-    // TODO: call recv until we have the end of the headers and request
-    // append to a buffer, resizing along the way?
-
-    // TODO: helper method which takes the client_fd and creates a request
-    // we can call recv until we receive \r\n\r\n
+    
     bool processing = true;
     char data[4096] = {0};
     size_t data_size = sizeof(data);
@@ -137,7 +132,6 @@ int start_server(server *s) {
     resp->http_code = 404; // default
     resp->body = "default";
 
-    // find the relevant route handler, call it
     for (int i = 0; i < s->handlers_len; i++) {
       printf("checking if route handler matches. path: %s\n", s->handlers[i]->path);
       if (strstr(data, s->handlers[i]->path) != NULL) {
